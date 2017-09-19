@@ -1,0 +1,9 @@
+{
+  "username": "guest",
+  "password": "guest",
+  "hostname": "127.0.0.1",
+  "port": 5672,
+  "vhost": "/",
+  "exchange": "rf",
+  "queues": ["firstQueue"]
+}

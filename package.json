@@ -1,0 +1,51 @@
+{
+  "name": "rab-q",
+  "version": "0.1.0",
+  "description": "A tiny (opinionated) wrapper over amqplib for RabbitMQ publish/subscribe pattern",
+  "license": "CECILL-B",
+  "repository": "radiofrance/rab-q",
+  "author": {
+    "name": "Radio France",
+    "email": "opensource@radiofrance.com",
+    "url": "www.radiofrance.fr"
+  },
+  "engines": {
+    "node": ">=6"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "test": "nyc ava",
+    "report": "nyc report --reporter=html"
+  },
+  "files": [
+    "index.js",
+    "lib/"
+  ],
+  "keywords": [
+    "rabbitmq",
+    "amqp",
+    "broker",
+    "exchange",
+    "queue",
+    "promise"
+  ],
+  "dependencies": {
+    "amqplib": "^0.5.1",
+    "uuid": "^3.0.1"
+  },
+  "devDependencies": {
+    "ava": "^0.22.0",
+    "codecov": "^2.3.0",
+    "delay": "^2.0.0",
+    "eslint": "^4.7.1",
+    "eslint-config-xo-space": "^0.16.0",
+    "nyc": "^11.2.1"
+  },
+  "eslintConfig": {
+    "extends": "xo-space/esnext",
+    "rules": {
+      "capitalized-comments": "off",
+      "no-console": "error"
+    }
+  }
+}
