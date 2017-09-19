@@ -34,7 +34,7 @@
       alt="Downloads" />
   </a>
   <!-- Standard -->
-  <a href="https://standardjs.com">
+  <a href="http://www.radiofrance.fr/">
     <img src="https://img.shields.io/badge/radio-france-blue.svg?style=flat-square&colorA=0046e2&colorB=000000"
       alt="RadioFrance" />
   </a>
