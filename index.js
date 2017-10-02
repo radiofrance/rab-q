@@ -135,18 +135,8 @@ class RabQ extends EventEmitter {
 
   healthcheck() {
     const ch = _channel.get(this);
-    return new Promise((resolve, reject) => {
-      try {
-        ch.publish(this.exchange, 'fake', new Buffer(JSON.stringify({})), {}, err => {
-          if (err) {
-            return reject(err);
-          }
-          return resolve();
-        });
-      } catch (e) {
-        return reject(e);
-      }
-    });
+
+    return ch.checkExchange(this.exchange);
   }
 
   publish(routingKey, content, headers = {}, messageId = uuid.v4()) {
