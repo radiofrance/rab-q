@@ -169,8 +169,12 @@ test('healthcheck valid connection', async t => {
 
 test('healthcheck throws when error', async t => {
   const p = new RabQ(minimalOptions);
+
+  p.on('error', () => {});
   await p.start();
-  await p.stop();
+
+  p.exchange = 'undefinedExchange';
+
   await t.throws(p.healthcheck());
 });
 
