@@ -33,7 +33,7 @@ test('set consumer without subscribers', async t => {
 });
 
 test('set consumer with minimal form subscriber', async t => {
-  t.plan(9);
+  t.plan(8);
 
   const contentToSend = {toto: 'tata'};
 
@@ -47,7 +47,6 @@ test('set consumer with minimal form subscriber', async t => {
     t.truthy(message.originMsg);
     t.truthy(message.consumeAt);
     t.is(Object.keys(p.unackedMessages).length, 1);
-    t.truthy(message.rabQ);
     return Promise.resolve(message.ACK);
   });
 
@@ -112,7 +111,7 @@ test('unacked message stored', async t => {
 });
 
 test('autoAck mode', async t => {
-  t.plan(7);
+  t.plan(6);
 
   const contentToSend = {toto: 'tata'};
 
@@ -129,7 +128,6 @@ test('autoAck mode', async t => {
     t.truthy(message.token);
     t.truthy(message.originMsg);
     t.truthy(message.consumeAt);
-    t.truthy(message.rabQ);
   });
 
   p.publish('', contentToSend);
