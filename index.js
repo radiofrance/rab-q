@@ -89,6 +89,10 @@ class RabQ extends EventEmitter {
       })
       .catch(err => {
         // Retry
+        if (!err.message && err.fields) {
+          err.message = err.fields.replyText;
+        }
+
         this.emit('error', new Error(`Failed to connect (amqp://${this.hostname}:${this.port}/${encodeURIComponent(this.vhost)}) ${err.message}`));
 
         if (!this.autoReconnect) {
