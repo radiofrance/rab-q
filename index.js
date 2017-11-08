@@ -72,7 +72,7 @@ class RabQ extends EventEmitter {
       .then(([conn, ch]) => listenEvents(conn, ch, this))
       .then(([conn, ch]) => resendMessages(conn, ch, this))
       .then(([conn, ch]) => initQueues(conn, ch, this))
-      .then(([conn, ch]) => setConsumer(conn, ch, this))
+      .then(([conn, ch, currentQueues]) => setConsumer(conn, ch, currentQueues, this))
       .then(([conn, ch]) => {
         this.isStarted = true;
         _channel.set(this, ch);

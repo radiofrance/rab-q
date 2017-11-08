@@ -15,9 +15,12 @@ test('init queues if not defined in options', async t => {
   const [conn, ch] = await getConnection(c);
 
   t.falsy(p.queues);
-  await t.notThrows(initQueues(conn, ch, p));
-  t.true(Array.isArray(p.queues));
-  t.is(typeof p.queues[0], 'string');
+  await t.notThrows(initQueues(conn, ch, p)
+    .then(([,, currentQueues]) => {
+      t.falsy(p.queues);
+      t.true(Array.isArray(currentQueues));
+      t.is(typeof currentQueues[0], 'string');
+    }));
 });
 
 test('init queues do nothing if already defined', async t => {
@@ -27,7 +30,9 @@ test('init queues do nothing if already defined', async t => {
 
   t.true(Array.isArray(p.queues));
   t.is(p.queues[0], 'firstQueue');
-  await t.notThrows(initQueues(conn, ch, p));
-  t.true(Array.isArray(p.queues));
-  t.is(p.queues[0], 'firstQueue');
+  await t.notThrows(initQueues(conn, ch, p)
+    .then(([,, currentQueues]) => {
+      t.true(Array.isArray(currentQueues));
+      t.is(currentQueues[0], 'firstQueue');
+    }));
 });

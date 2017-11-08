@@ -27,9 +27,9 @@ test('set consumer without subscribers', async t => {
   delete c.queues;
   const p = new RabQ(c);
   const [conn, ch] = await getConnection(c);
-  await initQueues(conn, ch, p);
+  const [, , currentQueues] = await initQueues(conn, ch, p);
 
-  await t.notThrows(setConsumer(conn, ch, p));
+  await t.notThrows(setConsumer(conn, ch, currentQueues, p));
 });
 
 test('set consumer with minimal form subscriber', async t => {
@@ -124,7 +124,7 @@ test('autoAck mode', async t => {
   p.subscribesTo(/.*/, message => {
     t.deepEqual(message.content, contentToSend);
     t.is(message.rk, '');
-    t.is(message.queue, p.queues[0]);
+    t.regex(message.queue, /amq\.gen-.*/);
     t.truthy(message.token);
     t.truthy(message.originMsg);
     t.truthy(message.consumeAt);
