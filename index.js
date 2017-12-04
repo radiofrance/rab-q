@@ -3,6 +3,7 @@
 const EventEmitter = require('events');
 
 const uuid = require('uuid');
+const pWaitFor = require('p-wait-for');
 
 const assertExchangeExists = require('./lib/assert-exchange-exists');
 const assertQueuesExists = require('./lib/assert-queues-exists');
@@ -112,12 +113,20 @@ class RabQ extends EventEmitter {
     if (!connection) {
       return Promise.resolve(false);
     }
-    _channel.set(this, undefined);
-    _connection.set(this, undefined);
-    connection.close()
-      .catch(() => {});
-
-    return Promise.resolve(true);
+    const ch = _channel.get(this);
+    return ch.cancel(ch.consumerTag)
+      .then(() => {
+        return pWaitFor(() => {
+          return Object.keys(this.unackedMessages).length === 0;
+        });
+      })
+      .then(() => {
+        _channel.set(this, undefined);
+        _connection.set(this, undefined);
+        return connection.close()
+          .then(() => true)
+          .catch(() => {});
+      });
   }
 
   subscribesTo(patternMatch, action) {
