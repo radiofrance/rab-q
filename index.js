@@ -114,19 +114,23 @@ class RabQ extends EventEmitter {
       return Promise.resolve(false);
     }
     const ch = _channel.get(this);
-    return ch.cancel(ch.consumerTag)
-      .then(() => {
-        return pWaitFor(() => {
-          return Object.keys(this.unackedMessages).length === 0;
+
+    const cancelPromises = ch.consumerTag.map(tag => {
+      return ch.cancel(tag)
+        .then(() => {
+          return pWaitFor(() => {
+            return Object.keys(this.unackedMessages).length === 0;
+          });
         });
-      })
+    });
+    return Promise.all(cancelPromises)
       .then(() => {
         _channel.set(this, undefined);
         _connection.set(this, undefined);
-        return connection.close()
-          .then(() => true)
-          .catch(() => {});
-      });
+        return connection.close();
+      })
+      .then(() => true)
+      .catch(() => {});
   }
 
   subscribesTo(patternMatch, action) {
