@@ -130,7 +130,11 @@ class RabQ extends EventEmitter {
         return connection.close();
       })
       .then(() => true)
-      .catch(() => {});
+      .catch(() => {
+        // If unexpected stop, reset variable to allow restart
+        _channel.set(this, undefined);
+        _connection.set(this, undefined);
+      });
   }
 
   subscribesTo(patternMatch, action) {
