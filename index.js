@@ -70,14 +70,18 @@ class RabQ extends EventEmitter {
       .then(() => assertExchangeExists(settings, this.exchange))
       .then(() => assertQueuesExists(settings, this.queues))
       .then(() => getConnection(settings))
+      .then(([conn, ch]) => { // Save channel and connection to current instance of rab-q
+        _channel.set(this, ch);
+        _connection.set(this, conn);
+
+        return Promise.resolve(([conn, ch]));
+      })
       .then(([conn, ch]) => listenEvents(conn, ch, this))
       .then(([conn, ch]) => resendMessages(conn, ch, this))
       .then(([conn, ch]) => initQueues(conn, ch, this))
       .then(([conn, ch, currentQueues]) => setConsumer(conn, ch, currentQueues, this))
-      .then(([conn, ch]) => {
+      .then(() => {
         this.isStarted = true;
-        _channel.set(this, ch);
-        _connection.set(this, conn);
 
         this.emit('log', {
           level: 'info',
