@@ -41,6 +41,7 @@ class RabQ extends EventEmitter {
     this.reconnectInterval = opts.reconnectInterval || 30 * 1000; // Time in milliseconds before trying reconnect when connection lost
     this.autoAck = opts.autoAck || false; // Enable auto acknowledged message with ConfirmChannel
     this.autoReconnect = opts.autoReconnect !== false; // Enable auto reconnection if error happened on connection (default: true)
+    this.requiredHeaders = opts.requiredHeaders; // Emit error on messages without required headers
 
     _connection.set(this, undefined);
     _channel.set(this, undefined);
