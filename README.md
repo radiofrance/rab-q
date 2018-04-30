@@ -193,6 +193,13 @@ Default: `true`
 
 Enables auto reconnection if an error happens while connecting to the server.
 
+##### requiredHeaders
+
+Type `Array<string>`<br>
+Default: `null`
+
+List of headers which should be in each message. If one is missing, an event `log` with `level='error'` will be emit. 
+
 ### rabQ.start()
 
 Starts a connection.
