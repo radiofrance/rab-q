@@ -14,9 +14,13 @@ before_install:
   - curl -i -u guest:guest -H "content-type:application/json" -XPUT -d'{"type":"topic","auto_delete":false,"durable":true,"internal":false,"arguments":{}}' http://127.0.0.1:15672/api/exchanges/%2f/rf
   - curl -i -u guest:guest -H "content-type:application/json" -XPUT http://127.0.0.1:15672/api/queues/%2f/firstQueue
   - curl -i -u guest:guest -H "content-type:application/json" -XPUT http://127.0.0.1:15672/api/queues/%2f/secondQueue
+  - curl -i -u guest:guest -H "content-type:application/json" -XPUT http://127.0.0.1:15672/api/queues/%2f/thirdQueue
+  - curl -i -u guest:guest -H "content-type:application/json" -XPUT http://127.0.0.1:15672/api/queues/%2f/fourthQueue
   - curl -i -u guest:guest -H "content-type:application/json" -XPUT http://127.0.0.1:15672/api/queues/%2f/unackedQueue
   - curl -i -u guest:guest -H "content-type:application/json" -XPOST -d '{"routing_key":"*.random.routingKey.*"}' http://127.0.0.1:15672/api/bindings/%2f/e/rf/q/firstQueue
   - curl -i -u guest:guest -H "content-type:application/json" -XPOST -d '{"routing_key":"*.randomBis.routingKey.*"}' http://127.0.0.1:15672/api/bindings/%2f/e/rf/q/secondQueue
+  - curl -i -u guest:guest -H "content-type:application/json" -XPOST -d '{"routing_key":"test3.*.routingKey.test3"}' http://127.0.0.1:15672/api/bindings/%2f/e/rf/q/thirdQueue
+  - curl -i -u guest:guest -H "content-type:application/json" -XPOST -d '{"routing_key":"test4.*.routingKey.test4"}' http://127.0.0.1:15672/api/bindings/%2f/e/rf/q/fourthQueue
   - curl -i -u guest:guest -H "content-type:application/json" -XPOST -d '{"routing_key":"*.randomUnacked.routingKey.*"}' http://127.0.0.1:15672/api/bindings/%2f/e/rf/q/unackedQueue
   - sudo rabbitmqctl list_exchanges
   - sudo rabbitmqctl list_queues

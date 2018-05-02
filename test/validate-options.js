@@ -96,4 +96,18 @@ test('options optional validate', t => {
   t.throws(() => {
     validateOptions(c);
   });
+
+  c = Object.assign({}, minimalOptions);
+  c.validators = 'notObject';
+  t.throws(() => {
+    validateOptions(c);
+  });
+
+  c = Object.assign({}, minimalOptions);
+  c.validators = {
+    consumer: 'notFunction'
+  };
+  t.throws(() => {
+    validateOptions(c);
+  });
 });
