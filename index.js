@@ -42,6 +42,11 @@ class RabQ extends EventEmitter {
     this.autoAck = opts.autoAck || false; // Enable auto acknowledged message with ConfirmChannel
     this.autoReconnect = opts.autoReconnect !== false; // Enable auto reconnection if error happened on connection (default: true)
 
+    this.validators = opts.validators || {};
+    if (!this.validators.consumer) { // Function to validate all incoming message
+      this.validators.consumer = () => true; // By default, all message are valid
+    }
+
     _connection.set(this, undefined);
     _channel.set(this, undefined);
   }

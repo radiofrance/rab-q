@@ -193,6 +193,17 @@ Default: `true`
 
 Enables auto reconnection if an error happens while connecting to the server.
 
+##### validators
+
+Type: `Object of function`<br>
+
+###### validators.consumer
+
+Type: `boolean`<br>
+Default: `return true`
+
+Function run before each message treatment. If it return a false value, the message is reject.
+
 ### rabQ.start()
 
 Starts a connection.

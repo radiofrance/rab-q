@@ -87,6 +87,59 @@ test('set consumer with complete form subscriber', async t => {
   return delay(1000);
 });
 
+test('set consumer with message which does not validate', async t => {
+  t.plan(1);
+
+  const contentToSend = {toto: 'tata'};
+
+  const c = Object.assign({}, minimalOptions);
+  c.queues = 'thirdQueue';
+  c.validators = {
+    consumer: () => {
+      return false;
+    }
+  };
+  const p = await makeRabQ(c);
+
+  p.subscribesTo(/test3\.random\.routingKey\.test3/, () => {
+    t.not('Function not called', 'Function not called');
+  });
+
+  p.publish('test3.random.routingKey.test3', contentToSend);
+
+  return delay(1000)
+    .then(() => {
+      t.is(Object.keys(p.unackedMessages).length, 0);
+    });
+});
+
+test('set consumer with message which validate', async t => {
+  t.plan(2);
+
+  const contentToSend = {toto: 'tata'};
+
+  const c = Object.assign({}, minimalOptions);
+  c.queues = 'fourthQueue';
+  c.validators = {
+    consumer: () => {
+      return true;
+    }
+  };
+  const p = await makeRabQ(c);
+
+  p.subscribesTo(/test4\.random\.routingKey\.test4/, message => {
+    t.is('Function called', 'Function called');
+    return Promise.resolve(message.ACK);
+  });
+
+  p.publish('test4.random.routingKey.test4', contentToSend);
+
+  return delay(1000)
+    .then(() => {
+      t.is(Object.keys(p.unackedMessages).length, 0);
+    });
+});
+
 test('unacked message stored', async t => {
   t.plan(4);
 
