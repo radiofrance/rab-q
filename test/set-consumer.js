@@ -95,7 +95,7 @@ test('set consumer with message which does not validate', async t => {
   const c = Object.assign({}, minimalOptions);
   c.queues = 'thirdQueue';
   c.validators = {
-    consume: () => {
+    consumer: () => {
       return false;
     }
   };
@@ -121,7 +121,7 @@ test('set consumer with message which validate', async t => {
   const c = Object.assign({}, minimalOptions);
   c.queues = 'fourthQueue';
   c.validators = {
-    consume: () => {
+    consumer: () => {
       return true;
     }
   };
@@ -139,7 +139,6 @@ test('set consumer with message which validate', async t => {
       t.is(Object.keys(p.unackedMessages).length, 0);
     });
 });
-
 
 test('unacked message stored', async t => {
   t.plan(4);
