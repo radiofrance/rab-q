@@ -169,6 +169,12 @@ class RabQ extends EventEmitter {
     return ch.checkExchange(this.exchange);
   }
 
+  checkQueue(name) {
+    const ch = _channel.get(this);
+
+    return ch.checkQueue(name);
+  }
+
   publish(routingKey, content, headers = {}, messageId = uuid.v4()) {
     const ch = _channel.get(this);
 
