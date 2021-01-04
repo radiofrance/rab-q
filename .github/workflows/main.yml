@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  test:
+    name: Node.js ${{ matrix.node_version }} on ${{ matrix.os }}
+    services:
+      rabbitmq:
+        image: rabbitmq:management
+        ports:
+          - 5672:5672
+          - 15672:15672
+        options: --health-cmd "rabbitmqctl node_health_check" --health-interval 10s --health-timeout 5s --health-retries 5
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        node_version:
+          - 15
+          - 14
+          - 12
+          - 10
+        os:
+          - ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node_version }}
+
+      - run: curl -i -u guest:guest -H "content-type:application/json" -XPUT -d'{"type":"topic","auto_delete":false,"durable":true,"internal":false,"arguments":{}}' http://127.0.0.1:15672/api/exchanges/%2f/rf
+      - run: curl -i -u guest:guest -H "content-type:application/json" -XPUT -d'{"type":"topic","auto_delete":false,"durable":true,"internal":false,"arguments":{}}' http://127.0.0.1:15672/api/exchanges/%2f/rf
+      - run: curl -i -u guest:guest -H "content-type:application/json" -XPUT http://127.0.0.1:15672/api/queues/%2f/firstQueue
+      - run: curl -i -u guest:guest -H "content-type:application/json" -XPUT http://127.0.0.1:15672/api/queues/%2f/secondQueue
+      - run: curl -i -u guest:guest -H "content-type:application/json" -XPUT http://127.0.0.1:15672/api/queues/%2f/thirdQueue
+      - run: curl -i -u guest:guest -H "content-type:application/json" -XPUT http://127.0.0.1:15672/api/queues/%2f/fourthQueue
+      - run: curl -i -u guest:guest -H "content-type:application/json" -XPUT http://127.0.0.1:15672/api/queues/%2f/unackedQueue
+      - run: curl -i -u guest:guest -H "content-type:application/json" -XPOST -d '{"routing_key":"*.random.routingKey.*"}' http://127.0.0.1:15672/api/bindings/%2f/e/rf/q/firstQueue
+      - run: curl -i -u guest:guest -H "content-type:application/json" -XPOST -d '{"routing_key":"*.randomBis.routingKey.*"}' http://127.0.0.1:15672/api/bindings/%2f/e/rf/q/secondQueue
+      - run: curl -i -u guest:guest -H "content-type:application/json" -XPOST -d '{"routing_key":"test3.*.routingKey.test3"}' http://127.0.0.1:15672/api/bindings/%2f/e/rf/q/thirdQueue
+      - run: curl -i -u guest:guest -H "content-type:application/json" -XPOST -d '{"routing_key":"test4.*.routingKey.test4"}' http://127.0.0.1:15672/api/bindings/%2f/e/rf/q/fourthQueue
+      - run: curl -i -u guest:guest -H "content-type:application/json" -XPOST -d '{"routing_key":"*.randomUnacked.routingKey.*"}' http://127.0.0.1:15672/api/bindings/%2f/e/rf/q/unackedQueue
+
+      - run: npm install
+      - run: npm run lint
+      - run: npm test
+      - uses: codecov/codecov-action@v1
+        if: matrix.os == 'ubuntu-latest' && matrix.node_version == 14
+        with:
+          fail_ci_if_error: true

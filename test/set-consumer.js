@@ -52,8 +52,11 @@ test('set consumer with minimal form subscriber', async t => {
 
   p.publish('test1.random.routingKey.test1', contentToSend);
 
-  return delay(1000)
+  return delay(2000)
     .then(() => {
+      if (Object.keys(p.unackedMessages).length) {
+        t.log(p.unackedMessages);
+      }
       t.is(Object.keys(p.unackedMessages).length, 0);
     });
 });
