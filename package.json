@@ -14,8 +14,7 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "test": "nyc ava",
-    "report": "nyc report --reporter=html"
+    "test": "nyc --reporter=html --reporter=text --reporter=lcov ava"
   },
   "files": [
     "index.js",
