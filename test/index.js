@@ -18,7 +18,7 @@ test('constructor with default options', t => {
       queues: p.queues
     }, minimalOptions);
 
-    t.is(p.maxMessages, 1000);
+    t.is(p.maxMessages, 10);
     t.is(p.nackDelay, 0);
     t.is(p.reconnectInterval, 30000);
     t.is(p.autoAck, false);

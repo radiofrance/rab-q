@@ -36,7 +36,7 @@ class RabQ extends EventEmitter {
 
     this.queues = opts.queues; // Array of queue name. If undefined a autogenerate queue is created
 
-    this.maxMessages = opts.maxMessages || 1000; // Define count of message prefetched by channel. Once max reached RabbitMQ waits somes messages are acknowledged to proceed send messages.
+    this.maxMessages = opts.maxMessages || 10; // Define count of message prefetched by channel. Once max reached RabbitMQ waits somes messages are acknowledged to proceed send messages.
     this.nackDelay = opts.nackDelay || 0; // Define a time delay in milliseconds before reject a message with NACK status to avoid immediate requeue
     this.reconnectInterval = opts.reconnectInterval || 30 * 1000; // Time in milliseconds before trying reconnect when connection lost
     this.autoAck = opts.autoAck || false; // Enable auto acknowledged message with ConfirmChannel
