@@ -175,34 +175,41 @@ class RabQ extends EventEmitter {
     return ch.checkQueue(name);
   }
 
-  publish(routingKey, content, headers = {}, messageId = uuid.v4()) {
+  publish(routingKey, content, properties = {}, messageId = uuid.v4()) {
     const ch = _channel.get(this);
 
-    if (!headers['x-query-token']) {
-      headers['x-query-token'] = uuid.v4();
+    // if no headers in properties, we consider we were given the headers object (old way)
+    if (!properties.headers) {
+      properties = {
+        headers: {...properties}
+      }
+    }
+
+    if (!properties.headers['x-query-token']) {
+      properties.headers['x-query-token'] = uuid.v4();
     }
 
     this.emit('log', {
       level: 'info',
       uuid: content.uuid,
-      token: headers['x-query-token'],
+      token: properties.headers['x-query-token'],
       msg: `Publishing message with routingKey "${routingKey}" to exchange "${this.exchange}"`
     });
 
     try {
-      ch.publish(this.exchange, routingKey, new Buffer(JSON.stringify(content)), {headers}, err => {
+      ch.publish(this.exchange, routingKey, new Buffer(JSON.stringify(content)), properties, err => {
         if (err) {
           // Store message when error happened
           this.messagesToSend[messageId] = {
             exchange: this.exchange,
             routingKey,
             content,
-            headers
+            properties
           };
           this.emit('log', {
             level: 'error',
             uuid: content.uuid,
-            token: headers['x-query-token'],
+            token: properties.headers['x-query-token'],
             msg: `Error publishing message with routingKey "${routingKey}" to exchange "${this.exchange}"`,
             err
           });
@@ -214,12 +221,12 @@ class RabQ extends EventEmitter {
         exchange: this.exchange,
         routingKey,
         content,
-        headers
+        properties
       };
       this.emit('log', {
         level: 'error',
         uuid: content.uuid,
-        token: headers['x-query-token'],
+        token: properties.headers['x-query-token'],
         msg: `Error publishing message (CATCH) with routingKey "${routingKey}" to exchange "${this.exchange}"`,
         err: e
       });
