@@ -178,6 +178,12 @@ test('healthcheck throws when error', async t => {
   await t.throws(p.healthcheck());
 });
 
+test('check queue retrieve informations', async t => {
+  const p = new RabQ(minimalOptions);
+  await p.start();
+  await t.notThrows(p.checkQueue('firstQueue'));
+});
+
 test('publish content', async t => {
   const p = new RabQ(minimalOptions);
   await p.start();
