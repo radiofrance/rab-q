@@ -182,7 +182,7 @@ class RabQ extends EventEmitter {
     if (!properties.headers) {
       properties = {
         headers: {...properties}
-      }
+      };
     }
 
     if (!properties.headers['x-query-token']) {
