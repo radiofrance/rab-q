@@ -161,7 +161,7 @@ If this option is omitted or has a *falsey* value, server will create random nam
 ##### maxMessages
 
 Type: `number`<br>
-Default: `1000`
+Default: `10`
 
 Defines the number of messages prefetched by channel. Once the max number of messages is reached, RabbitMQ will wait for some messages to be acknowledged before proceeding with new messages.
 

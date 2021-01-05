@@ -33,30 +33,26 @@ test('set consumer without subscribers', async t => {
 });
 
 test('set consumer with minimal form subscriber', async t => {
-  t.plan(8);
+  t.plan(7);
 
   const contentToSend = {toto: 'tata'};
 
   const p = await makeRabQ(minimalOptions);
 
-  p.subscribesTo(/test1\.random\.routingKey\.test1/, message => {
+  p.subscribesTo(/test1\.random\.routingKey\.test1/, async message => {
     t.deepEqual(message.content, contentToSend);
     t.is(message.rk, 'test1.random.routingKey.test1');
     t.is(message.queue, 'firstQueue');
     t.truthy(message.token);
     t.truthy(message.originMsg);
     t.truthy(message.consumeAt);
-    t.is(Object.keys(p.unackedMessages).length, 1);
     return Promise.resolve(message.ACK);
   });
 
   p.publish('test1.random.routingKey.test1', contentToSend);
 
-  return delay(2000)
+  return delay(1000)
     .then(() => {
-      if (Object.keys(p.unackedMessages).length) {
-        t.log(p.unackedMessages);
-      }
       t.is(Object.keys(p.unackedMessages).length, 0);
     });
 });
