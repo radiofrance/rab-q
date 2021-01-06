@@ -214,7 +214,7 @@ Returns a promise resolved with `true` for a successful connection or `false` if
 
 Stops and closes a connection.
 
-### rabQ.publish(routingKey, content, headers)
+### rabQ.publish(routingKey, content, properties)
 
 Publishes a message on exchange `rabQ.exchange`.
 
@@ -232,14 +232,16 @@ Type: `Object`
 
 A message object to send to the exchange.
 
-#### headers
+#### properties
 
 Type: `Object`<br>
 Default: `{}`
 
-Adds RabbitMQ headers to the message.
+Adds RabbitMQ properties to the message. See http://www.squaremobius.net/amqp.node/channel_api.html#channel_publish (options)
 
-You can provide a property `x-query-token` to trace the lifecyle of a request. If not provided a new UUID will be generated.
+If properties does not have a `headers` key, `properties` is considered to be `headers`.
+
+You can provide a property `x-query-token` in `headers` to trace the lifecyle of a request. If not provided a new UUID will be generated.
 
 ### rabQ.subscribesTo(patternMatch, action)
 
