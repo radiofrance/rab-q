@@ -127,7 +127,7 @@ test('set consumer with message which validate', async t => {
   const p = await makeRabQ(c);
 
   p.subscribesTo(/test4\.random\.routingKey\.test4/, message => {
-    t.is('Function called', 'Function called');
+    t.pass('Function called');
     return Promise.resolve(message.ACK);
   });
 
@@ -185,4 +185,33 @@ test('autoAck mode', async t => {
   p.publish('', contentToSend);
 
   return delay(1000);
+});
+
+test('set before and after hooks', async t => {
+  t.plan(2);
+
+  const contentToSend = {toto: 'tata'};
+  let afterHookMsg = null;
+
+  const c = Object.assign({}, minimalOptions);
+  c.queues = 'fithQueue';
+  c.beforeHook = msg => {
+    msg.test = 'before';
+  };
+  c.afterHook = (msg, result) => {
+    afterHookMsg = msg.test + result;
+  };
+  const p = await makeRabQ(c);
+
+  p.subscribesTo(/test5\.random\.routingKey\.test5/, message => {
+    t.pass('Function called');
+    return Promise.resolve(message.ACK);
+  });
+
+  p.publish('test5.random.routingKey.test5', contentToSend);
+
+  return delay(1000)
+    .then(() => {
+      t.is(afterHookMsg, 'beforeACK');
+    });
 });

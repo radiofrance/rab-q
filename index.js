@@ -47,6 +47,9 @@ class RabQ extends EventEmitter {
       this.validators.consumer = () => true; // By default, all message are valid
     }
 
+    this.beforeHook = opts.beforeHook || (() => {});
+    this.afterHook = opts.afterHook || (() => {});
+
     _connection.set(this, undefined);
     _channel.set(this, undefined);
   }

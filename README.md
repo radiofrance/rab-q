@@ -204,6 +204,22 @@ Default: `return true`
 
 Function run before each message treatment. If it return a false value, the message is reject.
 
+##### beforeHook
+
+Type: `function`<br>
+Default: () => {}
+Parameters: `message` (see below)
+
+Function run before each message treatment, can modify message.
+
+##### afterHook
+
+Type: `function`<br>
+Default: () => {}
+Parameters: `message` (see below), `subscriberResult` (ACK/NACK/REJECT)
+
+Function run after each message treatment.
+
 ### rabQ.start()
 
 Starts a connection.
