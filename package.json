@@ -1,6 +1,6 @@
 {
   "name": "rab-q",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "description": "A tiny (opinionated) wrapper over amqplib for RabbitMQ publish/subscribe pattern",
   "license": "CECILL-B",
   "repository": "radiofrance/rab-q",
