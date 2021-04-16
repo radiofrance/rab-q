@@ -201,6 +201,7 @@ test('set before and after hooks', async t => {
   c.afterHook = (msg, result) => {
     afterHookMsg = msg.test + result;
   };
+
   const p = await makeRabQ(c);
 
   p.subscribesTo(/test5\.random\.routingKey\.test5/, message => {
@@ -214,4 +215,29 @@ test('set before and after hooks', async t => {
     .then(() => {
       t.is(afterHookMsg, 'beforeACK');
     });
+});
+
+test('set prePublish', async t => {
+  t.plan(2);
+
+  const contentToSend = {toto: 'tata'};
+
+  const c = Object.assign({}, minimalOptions);
+  c.queues = 'sixthQueue';
+  c.prePublish = (routingKey, content, properties) => {
+    t.is(routingKey, 'test6.random.routingKey.test6');
+    properties.headers.test = 'TEST';
+    return {routingKey, content, properties};
+  };
+
+  const p = await makeRabQ(c);
+
+  p.subscribesTo(/test6\.random\.routingKey\.test6/, message => {
+    t.is(message.originMsg.properties.headers.test, 'TEST');
+    return Promise.resolve(message.ACK);
+  });
+
+  p.publish('test6.random.routingKey.test6', contentToSend);
+
+  return delay(1000);
 });

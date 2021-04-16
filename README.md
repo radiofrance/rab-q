@@ -220,6 +220,15 @@ Parameters: `message` (see below), `subscriberResult` (ACK/NACK/REJECT)
 
 Function run after each message treatment.
 
+##### prePublish
+
+Type: `function`<br>
+Default: null
+Parameters: `routingKey`, `content`, `properties` (see publish method)
+Must return an object with {routingKey, content, properties}
+
+Function run before each publish call
+
 ### rabQ.start()
 
 Starts a connection.
