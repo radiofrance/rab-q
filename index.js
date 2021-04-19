@@ -49,6 +49,7 @@ class RabQ extends EventEmitter {
 
     this.beforeHook = opts.beforeHook || (() => {});
     this.afterHook = opts.afterHook || (() => {});
+    this.prePublish = opts.prePublish || null;
 
     _connection.set(this, undefined);
     _channel.set(this, undefined);
@@ -190,6 +191,10 @@ class RabQ extends EventEmitter {
 
     if (!properties.headers['x-query-token']) {
       properties.headers['x-query-token'] = uuid.v4();
+    }
+
+    if (this.prePublish) {
+      ({routingKey, content, properties} = this.prePublish(routingKey, content, properties));
     }
 
     this.emit('log', {
