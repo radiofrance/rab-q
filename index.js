@@ -26,6 +26,7 @@ class RabQ extends EventEmitter {
 
     validateOptions(opts);
 
+    this.protocol = opts.protocol || 'amqp';
     this.hostname = opts.hostname || 'localhost';
     this.port = opts.port || 5672;
     this.username = opts.username || 'guest';
@@ -64,10 +65,11 @@ class RabQ extends EventEmitter {
       level: 'info',
       uuid: null,
       token: null,
-      msg: `Connecting to RabbitMQ ... (amqp://${this.hostname}:${this.port}/${encodeURIComponent(this.vhost)})`
+      msg: `Connecting to RabbitMQ ... (${this.protocol}://${this.hostname}:${this.port}/${encodeURIComponent(this.vhost)})`
     });
 
     const settings = {
+      protocol: this.protocol,
       hostname: this.hostname,
       port: this.port,
       username: this.username,

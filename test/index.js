@@ -9,6 +9,7 @@ test('constructor with default options', t => {
   t.notThrows(() => {
     const p = new RabQ(minimalOptions);
     t.deepEqual({
+      protocol: p.protocol,
       username: p.username,
       password: p.password,
       hostname: p.hostname,
