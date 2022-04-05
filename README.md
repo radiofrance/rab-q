@@ -122,6 +122,13 @@ Default: `guest`
 
 Password associate to username.
 
+##### protocol
+
+Type: `amqp|amqps`<br>
+Default: `amqp`
+
+Connection protocol.
+
 ##### hostname
 
 Type: `string`<br>
