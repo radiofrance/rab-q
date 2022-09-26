@@ -41,7 +41,7 @@
     "codecov": "^2.3.0",
     "delay": "^2.0.0",
     "eslint": "^4.7.1",
-    "eslint-config-xo-space": "^0.16.0",
+    "eslint-config-xo-space": "0.33.0",
     "nyc": "^11.2.1"
   },
   "eslintConfig": {
