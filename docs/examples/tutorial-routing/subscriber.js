@@ -2,19 +2,18 @@
 'use strict';
 
 const RabQ = require('../../../index');
+const fakeLogger = {
+  debug: () => {},
+  info: () => {},
+  warn: () => {},
+  error: () => {}
+};
 
 const rabQ = new RabQ({
   hostname: 'localRabbitMQ',
   exchange: 'direct_logs',
   queues: ['Q1', 'Q2']
-});
-
-rabQ.on('error', err => {
-  console.error(err);
-});
-rabQ.on('log', log => {
-  console[log.level](log.msg, log.err || '');
-});
+}, fakeLogger);
 
 rabQ.subscribesTo(/.*/, message => {
   // Do stuff!

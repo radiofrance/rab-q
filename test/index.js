@@ -5,9 +5,16 @@ import RabQ from '..';
 
 import minimalOptions from './config.json';
 
+const fakeLogger = {
+  debug: () => {},
+  info: () => {},
+  warn: () => {},
+  error: () => {}
+};
+
 test('constructor with default options', t => {
   t.notThrows(() => {
-    const p = new RabQ(minimalOptions);
+    const p = new RabQ(minimalOptions, fakeLogger);
     t.deepEqual({
       protocol: p.protocol,
       username: p.username,
@@ -33,47 +40,60 @@ test('constructor with overrides options', t => {
   c = Object.assign({}, minimalOptions);
   c.maxMessages = 132;
   t.notThrows(() => {
-    const p = new RabQ(c);
+    const p = new RabQ(c, fakeLogger);
     t.is(p.maxMessages, 132);
   });
 
   c = Object.assign({}, minimalOptions);
   c.nackDelay = 456;
   t.notThrows(() => {
-    const p = new RabQ(c);
+    const p = new RabQ(c, fakeLogger);
     t.is(p.nackDelay, 456);
   });
 
   c = Object.assign({}, minimalOptions);
   c.reconnectInterval = 978;
   t.notThrows(() => {
-    const p = new RabQ(c);
+    const p = new RabQ(c, fakeLogger);
     t.is(p.reconnectInterval, 978);
   });
 
   c = Object.assign({}, minimalOptions);
   c.autoAck = true;
   t.notThrows(() => {
-    const p = new RabQ(c);
+    const p = new RabQ(c, fakeLogger);
     t.is(p.autoAck, true);
   });
 
   c = Object.assign({}, minimalOptions);
   c.autoReconnect = false;
   t.notThrows(() => {
-    const p = new RabQ(c);
+    const p = new RabQ(c, fakeLogger);
     t.is(p.autoReconnect, false);
   });
 });
 
-test('throw error if failed to start', async t => {
+test('emit error if failed to start', async t => {
   const c = Object.assign({}, minimalOptions, {queues: 'notExists'});
-  const p = new RabQ(c);
-  await t.throws(p.start());
+  const p = new RabQ(c, fakeLogger);
+
+  let countRetry = 0;
+  p.on('error', err => {
+    if (err.toString().includes('Failed to connect')) {
+      countRetry++;
+    }
+  });
+
+  t.notThrows(p.start());
+
+  return delay(1000)
+    .then(() => {
+      t.true(countRetry === 1);
+    });
 });
 
 test('start connection', async t => {
-  const p = new RabQ(minimalOptions);
+  const p = new RabQ(minimalOptions, fakeLogger);
   await t.notThrows(p.start().then(isNewConnection => {
     t.true(isNewConnection);
   }));
@@ -83,7 +103,7 @@ test('retry to connect until success', t => {
   const c = Object.assign({}, minimalOptions, {vhost: 'wrongVHost', reconnectInterval: 500});
 
   let countRetry = 0;
-  const p = new RabQ(c);
+  const p = new RabQ(c, fakeLogger);
   p.on('error', err => {
     if (err.toString().includes('Failed to connect')) {
       countRetry++;
@@ -102,7 +122,7 @@ test('no retry to connect', t => {
   const c = Object.assign({}, minimalOptions, {vhost: 'wrongVHost', reconnectInterval: 500, autoReconnect: false});
 
   let countRetry = 0;
-  const p = new RabQ(c);
+  const p = new RabQ(c, fakeLogger);
   p.on('error', err => {
     if (err.toString().includes('Failed to connect')) {
       countRetry++;
@@ -118,14 +138,14 @@ test('no retry to connect', t => {
 });
 
 test('no start if connection already exist', async t => {
-  const p = new RabQ(minimalOptions);
+  const p = new RabQ(minimalOptions, fakeLogger);
   await t.notThrows(p.start());
   const isNewConnection = await p.start();
   t.false(isNewConnection);
 });
 
 test('stop connection', async t => {
-  const p = new RabQ(minimalOptions);
+  const p = new RabQ(minimalOptions, fakeLogger);
   await p.start();
   await t.notThrows(p.stop().then(isConnectionClosed => {
     t.true(isConnectionClosed);
@@ -133,14 +153,14 @@ test('stop connection', async t => {
 });
 
 test('no stop if no connection exist', async t => {
-  const p = new RabQ(minimalOptions);
+  const p = new RabQ(minimalOptions, fakeLogger);
   await t.notThrows(p.stop().then(isConnectionClosed => {
     t.false(isConnectionClosed);
   }));
 });
 
 test('add subscribers', async t => {
-  const p = new RabQ(minimalOptions);
+  const p = new RabQ(minimalOptions, fakeLogger);
   t.is(p.subscribers.length, 0);
 
   p.subscribesTo(/.*/, () => {});
@@ -163,13 +183,13 @@ test('add subscribers', async t => {
 });
 
 test('healthcheck valid connection', async t => {
-  const p = new RabQ(minimalOptions);
+  const p = new RabQ(minimalOptions, fakeLogger);
   await p.start();
   await t.notThrows(p.healthcheck());
 });
 
 test('healthcheck throws when error', async t => {
-  const p = new RabQ(minimalOptions);
+  const p = new RabQ(minimalOptions, fakeLogger);
 
   p.on('error', () => {});
   await p.start();
@@ -180,26 +200,26 @@ test('healthcheck throws when error', async t => {
 });
 
 test('check queue retrieve informations', async t => {
-  const p = new RabQ(minimalOptions);
+  const p = new RabQ(minimalOptions, fakeLogger);
   await p.start();
   await t.notThrows(p.checkQueue('firstQueue'));
 });
 
 test('publish content', async t => {
-  const p = new RabQ(minimalOptions);
+  const p = new RabQ(minimalOptions, fakeLogger);
   await p.start();
   t.notThrows(() => p.publish('fake', {cat: 'Simon'}));
   t.falsy(p.messagesToSend[Object.keys(p.messagesToSend)[0]]);
 });
 
 test('store content if publish wihout connection', t => {
-  const p = new RabQ(minimalOptions);
+  const p = new RabQ(minimalOptions, fakeLogger);
   t.notThrows(() => p.publish('fake', {cat: 'Simon'}));
   t.truthy(p.messagesToSend[Object.keys(p.messagesToSend)[0]]);
 });
 
 test('publish store content when connection established', async t => {
-  const p = new RabQ(minimalOptions);
+  const p = new RabQ(minimalOptions, fakeLogger);
   p.messagesToSend.randomId = {
     exchange: minimalOptions.exchange,
     routingKey: 'fake',

@@ -5,12 +5,18 @@ import getConnection from '../lib/get-connection';
 import initQueues from '../lib/init-queues';
 
 import minimalOptions from './config.json';
+const fakeLogger = {
+  debug: () => {},
+  info: () => {},
+  warn: () => {},
+  error: () => {}
+};
 
 test('init queues if not defined in options', async t => {
   const c = Object.assign({}, minimalOptions);
   delete c.queues;
 
-  const p = new RabQ(c);
+  const p = new RabQ(c, fakeLogger);
 
   const [conn, ch] = await getConnection(c);
 
@@ -24,7 +30,7 @@ test('init queues if not defined in options', async t => {
 });
 
 test('init queues do nothing if already defined', async t => {
-  const p = new RabQ(minimalOptions);
+  const p = new RabQ(minimalOptions, fakeLogger);
 
   const [conn, ch] = await getConnection(minimalOptions);
 

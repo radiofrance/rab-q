@@ -4,9 +4,15 @@
 
 ```js
 const RabQ = require('rab-q');
+const fakeLogger = {
+  debug: () => {},
+  info: () => {},
+  warn: () => {},
+  error: () => {}
+};
 
 async function initConnection(options) {
-  const r = new RabQ(options);
+  const r = new RabQ(options, fakeLogger);
 
   r.subscribesTo(/.*/, message => {
     // Do stuff

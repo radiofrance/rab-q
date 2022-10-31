@@ -18,7 +18,7 @@ const _channel = new WeakMap();
 const _connection = new WeakMap();
 
 class RabQ extends EventEmitter {
-  constructor(opts) {
+  constructor(opts, logger) {
     super();
     this.subscribers = [];
     this.messagesToSend = {};
@@ -55,6 +55,14 @@ class RabQ extends EventEmitter {
 
     _connection.set(this, undefined);
     _channel.set(this, undefined);
+
+    this.on('log', log => {
+      logger.info(null, log.token, log.msg, log.err);
+    });
+
+    this.on('error', err => {
+      logger.error(null, null, 'pubsub error', err);
+    });
   }
 
   start() {

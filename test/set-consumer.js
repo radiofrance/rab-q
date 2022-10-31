@@ -8,14 +8,15 @@ import setConsumer from '../lib/set-consumer';
 
 import minimalOptions from './config.json';
 
+const fakeLogger = {
+  debug: () => {},
+  info: () => {},
+  warn: () => {},
+  error: () => {}
+};
+
 async function makeRabQ(settings) {
-  const p = new RabQ(settings);
-  // p.on('log', log => {
-  //   console.log(log.msg + ' ' + log.err);
-  // });
-  // p.on('error', err => {
-  //   console.log(err);
-  // });
+  const p = new RabQ(settings, fakeLogger);
   await p.start();
   return p;
 }
@@ -25,7 +26,7 @@ test.todo('check if message is ack, nack, or reject by log emitted or/and number
 test('set consumer without subscribers', async t => {
   const c = Object.assign({}, minimalOptions);
   delete c.queues;
-  const p = new RabQ(c);
+  const p = new RabQ(c, fakeLogger);
   const [conn, ch] = await getConnection(c);
   const [, , currentQueues] = await initQueues(conn, ch, p);
 
