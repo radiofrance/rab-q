@@ -31,6 +31,7 @@ class RabQ extends EventEmitter {
     this.port = opts.port || 5672;
     this.username = opts.username || 'guest';
     this.password = opts.password || 'guest';
+    this.socketOptions = opts.socketOptions;
     this.vhost = opts.vhost || '/'; // Name of virtual host in RabbitMQ to access queues
 
     this.exchange = opts.exchange; // Name of exchange who distribute messages to queues through routing key
