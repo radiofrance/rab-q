@@ -143,6 +143,15 @@ Default: `5672`
 
 Port of connection.
 
+##### socketOptions
+
+Type: `object`
+Default: `null`
+
+socketOptions for amqplib
+
+https://amqp-node.github.io/amqplib/channel_api.html#connect
+
 ##### vhost
 
 Type: `string`<br>

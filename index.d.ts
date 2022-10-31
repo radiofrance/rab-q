@@ -31,6 +31,7 @@ export interface RabQConfig {
   protocol?: string;
   hostname?: string;
   port?: number;
+  socketOptions?: any;
   vhost?: string;
   exchange?: string;
   queues?: string[] | string;
