@@ -75,7 +75,8 @@ class RabQ extends EventEmitter {
       port: this.port,
       username: this.username,
       password: this.password,
-      vhost: this.vhost
+      vhost: this.vhost,
+      socketOptions: this.socketOptions
     };
 
     return Promise.resolve()
