@@ -48,6 +48,33 @@ export interface RabQConfig {
   prePublish?: (routingkey: string, content: Record<any, any>, properties: PublishProperties) => void;
 }
 
+interface Logger {
+  debug(
+    uuid: string | null,
+    token: string | null,
+    message: string,
+    error?: unknown,
+  ): void;
+  info(
+    uuid: string | null,
+    token: string | null,
+    message: string,
+    error?: unknown,
+  ): void;
+  warn(
+    uuid: string | null,
+    token: string | null,
+    message: string,
+    error?: unknown,
+  ): void;
+  error(
+    uuid: string | null,
+    token: string | null,
+    message: string,
+    error?: unknown,
+  ): void;
+}
+
 export default class RabQ {
   start: () => Promise<boolean>;
   stop: () => Promise<boolean>;
@@ -56,7 +83,7 @@ export default class RabQ {
     do: (message: Message) => Result | Promise<Result>;
   }) => void;
 
-  constructor(config: RabQConfig);
+  constructor(config: RabQConfig, logger: Logger);
 
   on(event: 'log', callback: (log: {
     level: 'info' | 'warn' | 'error';

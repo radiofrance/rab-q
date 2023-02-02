@@ -5,8 +5,15 @@ import resendMessages from '../lib/resend-messages';
 
 import minimalOptions from './config.json';
 
+const fakeLogger = {
+  debug: () => {},
+  info: () => {},
+  warn: () => {},
+  error: () => {}
+};
+
 test('republish content and remove it from store', async t => {
-  const p = new RabQ(minimalOptions);
+  const p = new RabQ(minimalOptions, fakeLogger);
 
   p.messagesToSend.unicornId = {
     exchange: minimalOptions.exchange,

@@ -5,17 +5,17 @@ const RabQ = require('../../../index');
 
 const routingKey = process.argv[2] || 'error';
 
+const fakeLogger = {
+  debug: () => {},
+  info: () => {},
+  warn: () => {},
+  error: () => {}
+};
+
 const rabQ = new RabQ({
   hostname: 'localRabbitMQ',
   exchange: 'direct_logs'
-});
-
-rabQ.on('error', err => {
-  console.error(err);
-});
-rabQ.on('log', log => {
-  console[log.level](log.msg, log.err || '');
-});
+}, fakeLogger);
 
 rabQ.start()
   .then(() => {

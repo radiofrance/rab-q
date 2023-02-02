@@ -2,20 +2,19 @@
 'use strict';
 
 const RabQ = require('../../../index');
+const fakeLogger = {
+  debug: () => {},
+  info: () => {},
+  warn: () => {},
+  error: () => {}
+};
 
 const routingKey = process.argv[2] || 'quick.orange.rabbit';
 
 const rabQ = new RabQ({
   hostname: 'localRabbitMQ',
   exchange: 'topic_logs'
-});
-
-rabQ.on('error', err => {
-  console.error(err);
-});
-rabQ.on('log', log => {
-  console[log.level](log.msg, log.err || '');
-});
+}, fakeLogger);
 
 rabQ.start()
   .then(() => {
