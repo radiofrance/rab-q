@@ -32,7 +32,7 @@
   ],
   "dependencies": {
     "@types/amqplib": "^0.8.2",
-    "amqplib": "^0.5.1",
+    "amqplib": "^0.10.3",
     "p-wait-for": "^1.0.0",
     "uuid": "^3.0.1"
   },
