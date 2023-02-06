@@ -38,7 +38,7 @@ export interface RabQConfig {
   };
   beforeHook?: (message: Message) => void;
   afterHook?: (message: Message, subscriberResult: Result) => void;
-  prePublish?: (routingkey: string, content: Record<any, any>, properties?: MessageProperties) => void;
+  prePublish?: (routingkey: string, content: Record<any, any>, properties?: Partial<MessageProperties>) => void;
 }
 
 interface Logger {
@@ -71,7 +71,7 @@ interface Logger {
 export default class RabQ {
   start: () => Promise<boolean>;
   stop: () => Promise<boolean>;
-  publish: (routingkey: string, content: Record<any, any>, properties?: MessageProperties) => void;
+  publish: (routingkey: string, content: Record<any, any>, properties?: Partial<MessageProperties>) => void;
   subscribesTo: (patternMatch: RegExp, action: {
     do: (message: Message) => Result | Promise<Result>;
   }) => void;
