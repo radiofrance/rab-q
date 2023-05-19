@@ -39,6 +39,7 @@ export interface RabQConfig {
   beforeHook?: (message: Message) => void;
   afterHook?: (message: Message, subscriberResult: Result) => void;
   prePublish?: (routingkey: string, content: Record<any, any>, properties?: Partial<MessageProperties>) => void;
+  xQueryTokenFallback?: () => string;
 }
 
 interface Logger {
