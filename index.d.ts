@@ -69,7 +69,7 @@ interface Logger {
   ): void;
 }
 
-export default class RabQ {
+declare class RabQ {
   start: () => Promise<boolean>;
   stop: () => Promise<boolean>;
   publish: (routingkey: string, content: Record<any, any>, properties?: Partial<MessageProperties>) => void;
@@ -87,3 +87,5 @@ export default class RabQ {
   }) => void): void;
   on(event: 'error', callback: (error: Error) => void): void;
 }
+
+export = RabQ;
