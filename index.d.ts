@@ -1,12 +1,14 @@
 import {MessageProperties} from 'amqplib';
 
+export {ConfirmChannel} from 'amqplib';
+
 type ACK = 'ACK';
 type NACK = 'NACK';
 type REJECT = 'REJECT';
 
 type Result = ACK | NACK | REJECT;
 
-type Message = {
+export type Message = {
   ACK: ACK;
   NACK: NACK;
   REJECT: REJECT;
@@ -69,7 +71,7 @@ interface Logger {
   ): void;
 }
 
-declare class RabQ {
+export class RabQ {
   start: () => Promise<boolean>;
   stop: () => Promise<boolean>;
   publish: (routingkey: string, content: Record<any, any>, properties?: Partial<MessageProperties>) => void;

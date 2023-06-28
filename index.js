@@ -2,6 +2,7 @@
 
 const EventEmitter = require('events');
 
+const {ConfirmChannel} = require('amqplib/lib/channel_model.js');
 const uuid = require('uuid');
 const pWaitFor = require('p-wait-for');
 
@@ -256,3 +257,5 @@ class RabQ extends EventEmitter {
 }
 
 module.exports = RabQ;
+module.exports.RabQ = RabQ;
+module.exports.ConfirmChannel = ConfirmChannel;
