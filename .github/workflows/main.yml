@@ -40,6 +40,7 @@ jobs:
       - run: curl -i -u guest:guest -H "content-type:application/json" -XPUT http://127.0.0.1:15672/api/queues/%2f/fourthQueue
       - run: curl -i -u guest:guest -H "content-type:application/json" -XPUT http://127.0.0.1:15672/api/queues/%2f/fithQueue
       - run: curl -i -u guest:guest -H "content-type:application/json" -XPUT http://127.0.0.1:15672/api/queues/%2f/sixthQueue
+      - run: curl -i -u guest:guest -H "content-type:application/json" -XPUT http://127.0.0.1:15672/api/queues/%2f/seventhQueue
       - run: curl -i -u guest:guest -H "content-type:application/json" -XPUT http://127.0.0.1:15672/api/queues/%2f/unackedQueue
       - run: curl -i -u guest:guest -H "content-type:application/json" -XPOST -d '{"routing_key":"*.random.routingKey.*"}' http://127.0.0.1:15672/api/bindings/%2f/e/rf/q/firstQueue
       - run: curl -i -u guest:guest -H "content-type:application/json" -XPOST -d '{"routing_key":"*.randomBis.routingKey.*"}' http://127.0.0.1:15672/api/bindings/%2f/e/rf/q/secondQueue
@@ -47,6 +48,7 @@ jobs:
       - run: curl -i -u guest:guest -H "content-type:application/json" -XPOST -d '{"routing_key":"test4.*.routingKey.test4"}' http://127.0.0.1:15672/api/bindings/%2f/e/rf/q/fourthQueue
       - run: curl -i -u guest:guest -H "content-type:application/json" -XPOST -d '{"routing_key":"test5.*.routingKey.test5"}' http://127.0.0.1:15672/api/bindings/%2f/e/rf/q/fithQueue
       - run: curl -i -u guest:guest -H "content-type:application/json" -XPOST -d '{"routing_key":"test6.*.routingKey.test6"}' http://127.0.0.1:15672/api/bindings/%2f/e/rf/q/sixthQueue
+      - run: curl -i -u guest:guest -H "content-type:application/json" -XPOST -d '{"routing_key":"test7.plaintext.routingKey.test7"}' http://127.0.0.1:15672/api/bindings/%2f/e/rf/q/seventhQueue
       - run: curl -i -u guest:guest -H "content-type:application/json" -XPOST -d '{"routing_key":"*.randomUnacked.routingKey.*"}' http://127.0.0.1:15672/api/bindings/%2f/e/rf/q/unackedQueue
 
       - run: npm install

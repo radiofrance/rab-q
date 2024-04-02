@@ -35,6 +35,7 @@ export interface RabQConfig {
   reconnectInterval?: number;
   autoAck?: boolean;
   autoReconnect?: boolean;
+  acceptPlainText?: boolean;
   validators?: {
     consumer: (exchange: string, queue: string, parsedMesage: Message) => boolean;
   };
