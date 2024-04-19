@@ -10,10 +10,10 @@ import minimalOptions from './config.json';
 
 /* eslint-disable */
 const fakeLogger = {
-  debug: (message) => console.log(message),
-  info: (message) => console.log(message),
-  warn: (message) => console.log(message),
-  error: (message) => console.log(message)
+  debug: () => {},
+  info: () => {},
+  warn: () => {},
+  error: (msg) => console.error(msg)
 };
 
 async function makeRabQ(settings) {
@@ -51,7 +51,7 @@ test('set consumer with minimal form subscriber', async t => {
     return Promise.resolve(message.ACK);
   });
 
-  p.publish('test1.random.routingKey.test1', contentToSend);
+  p.publish('test1.random.routingKey.test1', contentToSend, {headers: {test: 'toto'}});
 
   return delay(1000)
     .then(() => {

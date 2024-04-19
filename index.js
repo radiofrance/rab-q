@@ -240,8 +240,6 @@ class RabQ extends EventEmitter {
         }
       });
     } catch (e) {
-      /* eslint-disable no-console */
-      console.log(e);
       // Store message when error happened
       this.messagesToSend[messageId] = {
         exchange: this.exchange,

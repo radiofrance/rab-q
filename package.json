@@ -50,5 +50,8 @@
       "capitalized-comments": "off",
       "no-console": "error"
     }
+  },
+  "ava": {
+    "concurrency": 1
   }
 }
