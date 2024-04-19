@@ -220,8 +220,8 @@ class RabQ extends EventEmitter {
     });
 
     try {
-      const stringContent = this.acceptPlainText && typeof content === 'string' ? content : new Buffer(JSON.stringify(content));
-      ch.publish(this.exchange, routingKey, stringContent, properties, err => {
+      const stringContent = this.acceptPlainText && typeof content === 'string' ? content : JSON.stringify(content);
+      ch.publish(this.exchange, routingKey, Buffer.from(stringContent), properties, err => {
         if (err) {
           // Store message when error happened
           this.messagesToSend[messageId] = {
@@ -240,6 +240,8 @@ class RabQ extends EventEmitter {
         }
       });
     } catch (e) {
+      /* eslint-disable no-console */
+      console.log(e);
       // Store message when error happened
       this.messagesToSend[messageId] = {
         exchange: this.exchange,

@@ -53,7 +53,7 @@ jobs:
 
       - run: npm install
       - run: npm run lint
-      - run: npm test
+      - run: npm test --verbose
       - uses: codecov/codecov-action@v1
         if: matrix.os == 'ubuntu-latest' && matrix.node_version == 14
         with:
