@@ -8,11 +8,12 @@ import setConsumer from '../lib/set-consumer';
 
 import minimalOptions from './config.json';
 
+/* eslint-disable */
 const fakeLogger = {
   debug: () => {},
   info: () => {},
   warn: () => {},
-  error: () => {}
+  error: (msg) => console.error(msg)
 };
 
 async function makeRabQ(settings) {
@@ -50,7 +51,7 @@ test('set consumer with minimal form subscriber', async t => {
     return Promise.resolve(message.ACK);
   });
 
-  p.publish('test1.random.routingKey.test1', contentToSend);
+  p.publish('test1.random.routingKey.test1', contentToSend, {headers: {test: 'toto'}});
 
   return delay(1000)
     .then(() => {
@@ -239,6 +240,26 @@ test('set prePublish', async t => {
   });
 
   p.publish('test6.random.routingKey.test6', contentToSend);
+
+  return delay(1000);
+});
+
+test('receive plain text message', async t => {
+  t.plan(1);
+  const contentToSend = 'this is a plain text message';
+
+  const c = Object.assign({}, minimalOptions);
+  c.acceptPlainText = true;
+  c.queues = 'seventhQueue';
+
+  const p = await makeRabQ(c);
+
+  p.subscribesTo(/test7\.plaintext\.routingKey\.test7/, message => {
+    t.is(message.content, contentToSend);
+    return Promise.resolve(message.ACK);
+  });
+
+  p.publish('test7.plaintext.routingKey.test7', contentToSend);
 
   return delay(1000);
 });

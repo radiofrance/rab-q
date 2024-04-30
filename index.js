@@ -34,6 +34,7 @@ class RabQ extends EventEmitter {
     this.password = opts.password || 'guest';
     this.socketOptions = opts.socketOptions;
     this.vhost = opts.vhost || '/'; // Name of virtual host in RabbitMQ to access queues
+    this.acceptPlainText = opts.acceptPlainText || false;
 
     this.exchange = opts.exchange; // Name of exchange who distribute messages to queues through routing key
 
@@ -219,7 +220,8 @@ class RabQ extends EventEmitter {
     });
 
     try {
-      ch.publish(this.exchange, routingKey, new Buffer(JSON.stringify(content)), properties, err => {
+      const stringContent = this.acceptPlainText && typeof content === 'string' ? content : JSON.stringify(content);
+      ch.publish(this.exchange, routingKey, Buffer.from(stringContent), properties, err => {
         if (err) {
           // Store message when error happened
           this.messagesToSend[messageId] = {
